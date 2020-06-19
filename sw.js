@@ -19,6 +19,7 @@ const STATIC_ASSETS = [
 const STATIC_CACHE_NAME = 'cache-static-v2';
 
 self.addEventListener('install', async evt => {
+  self.skipWaiting(); //PENTING bila ada versi baru!!
   const cache = await caches.open(STATIC_CACHE_NAME);
   cache.addAll(STATIC_ASSETS);
 });
