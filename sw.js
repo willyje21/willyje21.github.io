@@ -16,7 +16,7 @@ const STATIC_ASSETS = [
  './images/icon/icon-512x512.png'
 ];
 
-const STATIC_CACHE_NAME = 'cache-static-v1';
+const STATIC_CACHE_NAME = 'cache-static-v2';
 
 self.addEventListener('install', async evt => {
   const cache = await caches.open(STATIC_CACHE_NAME);
