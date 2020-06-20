@@ -1,7 +1,6 @@
-const CACHE_NAME = 'my-site-cache-v3'
-const assets = [
-  '/',
-   './index.html',
+const STATIC_ASSETS = [ 
+  './',
+ './index.html',
  './manifest.json',
  './script/index.js',
  './script/jquery-3.3.1.min.js',
@@ -17,71 +16,52 @@ const assets = [
  './images/icon/icon-512x512.png'
 ];
 
-self.addEventListener('install', function(event) {
-  // Perform install steps
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-  );
+const STATIC_CACHE_NAME = 'cache-static-v5';
+
+self.addEventListener('install', async evt => {
+    self.skipWaiting(); //PENTING bila ada versi baru!!
+  const cache = await caches.open(STATIC_CACHE_NAME);
+  cache.addAll(STATIC_ASSETS);
 });
 
-self.addEventListener('activate', function(event) {
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          return cacheName != CACHE_NAME
-        }).map(function(cacheName) {
-          return caches.delete(cacheName)
-        })
-      );
-    })
-  );
+self.addEventListener('fetch', evt => {
+ const req = evt.request;
+ const url = new URL(req.url);
+
+ if (url.origin == location.origin) {
+  evt.respondWith(cacheFirst(req));
+ } else {
+  evt.respondWith(networkFirst(req));
+ }
 });
 
-self.addEventListener('fetch', function(event) {
-  var request = event.request
-  var url = new URL(request.url)
-  //pisahkan request API dan Internal(css, jss, dll.)
-  if (url.origin === location.origin) {
-    event.respondWith(
-      caches.match(request).then(function(response) {
-        return response || fetch(request)
-      })
-    )
-  } else {
-    event.respondWith(
-      caches.open('products-cache').then(function(cache) {
-        return fetch(request).then(function(liveResponse) {
-          cache.put(request, liveResponse.clone())
-          return liveResponse
-        }).catch(function() {
-          return caches.match(request).then(function(response) {
-            if(response) return response
-            return caches.match('/fallback.json')
-          })
-        })
-      })
-    )
-  }
-});
+async function cacheFirst(req) {
+ const cachedResponse = await caches.match(req);
+ return cachedResponse || fetch(req);
+}
 
-self.addEventListener('activate', function(event) {
+async function networkFirst(req) {
+ const cache = await caches.open(STATIC_CACHE_NAME);
+ try {
+        // try go to network and fetch data 
+  const res = await fetch(req);
+  cache.put(req, res.clone());
+  return res;
+ } catch(error) {
+        // look something on cache. 
+  return await cache.match(req);
+ }
+}
 
-  var cacheWhitelist = ['pages-cache-v1', 'blog-posts-cache-v1'];
-
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.map(function(cacheName) {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
+self.addEventListener('activate', (evt) => {
+ evt.waitUntil( 
+     caches.keys().then((keyList) => { 
+         return Promise.all(keyList.map((key) => { 
+             if (key !== STATIC_CACHE_NAME) { 
+                 console.log('[ServiceWorker] Removing old cache', key); 
+                 return caches.delete(key); 
+             } 
+         }));
+     })
+ ); 
 });
