@@ -1,5 +1,8 @@
-const STATIC_CACHE_NAME = 'cache-static-v4'
-const STATIC_ASSETS = [ 
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open('first-app')
+      .then(function(cache) {
+        cache.addAll([
  './',
  './index.html',
  './manifest.json',
@@ -15,52 +18,17 @@ const STATIC_ASSETS = [
  './images/icon/icon-256x256.png',
  './images/icon/icon-384x384.png',
  './images/icon/icon-512x512.png'
-];
-
-self.addEventListener('install', async evt => {
-  self.skipWaiting(); //PENTING bila ada versi baru!!
-  const cache = await caches.open(STATIC_CACHE_NAME);
-  cache.addAll(STATIC_ASSETS);
+        ])
+      })
+  );
+  return self.clients.claim();
 });
 
-self.addEventListener('fetch', evt => {
- const req = evt.request;
- const url = new URL(req.url);
-
- if (url.origin == location.origin) {
-  evt.respondWith(cacheFirst(req));
- } else {
-  evt.respondWith(networkFirst(req));
- }
-});
-
-async function cacheFirst(req) {
- const cachedResponse = await caches.match(req);
- return cachedResponse || fetch(req);
-}
-
-async function networkFirst(req) {
- const cache = await caches.open(STATIC_CACHE_NAME);
- try {
-        // try go to network and fetch data 
-  const res = await fetch(req);
-  cache.put(req, res.clone());
-  return res;
- } catch(error) {
-        // look something on cache. 
-  return await cache.match(req);
- }
-}
-
-self.addEventListener('activate', (evt) => {
- evt.waitUntil( 
-     caches.keys().then((keyList) => { 
-         return Promise.all(keyList.map((key) => { 
-             if (key !== STATIC_CACHE_NAME) { 
-                 console.log('[ServiceWorker] Removing old cache', key); 
-                 return caches.delete(key); 
-             } 
-         }));
-     })
- ); 
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(res) {
+        return res;
+      })
+  );
 });
