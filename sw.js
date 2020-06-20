@@ -1,3 +1,4 @@
+const STATIC_CACHE_NAME = 'cache-static-v4'
 const STATIC_ASSETS = [ 
  './',
  './index.html',
@@ -15,8 +16,6 @@ const STATIC_ASSETS = [
  './images/icon/icon-384x384.png',
  './images/icon/icon-512x512.png'
 ];
-
-const STATIC_CACHE_NAME = 'cache-static-v3';
 
 self.addEventListener('install', async evt => {
   self.skipWaiting(); //PENTING bila ada versi baru!!
