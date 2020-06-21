@@ -1,4 +1,4 @@
-var CACHE_STATIC_NAME = 'static-v6';
+var CACHE_STATIC_NAME = 'static-v7';
 
 self.addEventListener('install', function(event) {
   console.log('[Service Worker] Installing Service Worker ...', event);
@@ -8,20 +8,20 @@ self.addEventListener('install', function(event) {
     .then(function(cache) {
       console.log('[Service Worker] Precaching App Shell');
       return cache.addAll([
- './index.html',
- './manifest.json',
- './script/index.js',
- './script/jquery-3.3.1.min.js',
- './script/materialize.min.js',
- './css/boostrap.min.css',
- './css/materialize.min.css',
- './images/icon/icon-48x48.png',
- './images/icon/icon-96x96.png',
- './images/icon/icon-144x144.png',
- './images/icon/icon-192x192.png',
- './images/icon/icon-256x256.png',
- './images/icon/icon-384x384.png',
- './images/icon/icon-512x512.png'
+ '/index.html',
+ '/manifest.json',
+ '/script/index.js',
+ '/script/jquery-3.3.1.min.js',
+ '/script/materialize.min.js',
+ '/css/boostrap.min.css',
+ '/css/materialize.min.css',
+ '/images/icon/icon-48x48.png',
+ '/images/icon/icon-96x96.png',
+ '/images/icon/icon-144x144.png',
+ '/images/icon/icon-192x192.png',
+ '/images/icon/icon-256x256.png',
+ '/images/icon/icon-384x384.png',
+ '/images/icon/icon-512x512.png'
       ])
     })
   )
