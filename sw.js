@@ -25,7 +25,9 @@ self.addEventListener('install', function(event) {
     caches.open(STATIC_CACHE_NAME)
     .then(function(cache) {
       console.log('[Service Worker] Precaching App Shell');
-      return cache.addAll(STATIC_ASSETS)
+      return cache.addAll([
+        '/index.html',
+        '/css/bootstrap.min.css])
     })
   )
 });
