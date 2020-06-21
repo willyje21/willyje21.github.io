@@ -33,34 +33,24 @@ self.addEventListener('install', function(event) {
   )
 });
 
-self.addEventListener('fetch', evt => {
- const req = evt.request;
- const url = new URL(req.url);
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((resp) => {
+      return resp || fetch(event.request).then((response) => {
+        let responseClone = response.clone();
+        caches.open(STATIC_CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
 
- if (url.origin == location.origin) {
-  evt.respondWith(cacheFirst(req));
- } else {
-  evt.respondWith(networkFirst(req));
- }
+        return response;
+      });
+    }).catch(() => {
+      //console.log('ini belum ada inet');
+      //window.alert("sometext");
+      return caches.match('/offline.html');
+    })
+  );
 });
-
-async function cacheFirst(req) {
- const cachedResponse = await caches.match(req);
- return cachedResponse || fetch(req);
-}
-
-async function networkFirst(req) {
- const cache = await caches.open(STATIC_CACHE_NAME);
- try {
-        // try go to network and fetch data 
-  const res = await fetch(req);
-  cache.put(req, res.clone());
-  return res;
- } catch(error) {
-        // look something on cache. 
-  return await cache.match(req);
- }
-}
 
 self.addEventListener('activate', (evt) => {
  evt.waitUntil( 
