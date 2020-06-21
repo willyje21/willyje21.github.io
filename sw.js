@@ -18,10 +18,16 @@ const STATIC_ASSETS = [
 
 const STATIC_CACHE_NAME = 'cache-static-v5';
 
-self.addEventListener('install', async evt => {
-    self.skipWaiting(); //PENTING bila ada versi baru!!
-  const cache = await caches.open(STATIC_CACHE_NAME);
-  cache.addAll(STATIC_ASSETS);
+self.addEventListener('install', function(event) {
+  console.log('[Service Worker] Installing Service Worker ...', event);
+  self.skipWaiting(); //PENTING bila ada versi baru!!
+  event.waitUntil(
+    caches.open(CACHE_STATIC_NAME)
+    .then(function(cache) {
+      console.log('[Service Worker] Precaching App Shell');
+      return cache.addAll(STATIC_ASSETS)
+    })
+  )
 });
 
 self.addEventListener('fetch', evt => {
