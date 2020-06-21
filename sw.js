@@ -8,8 +8,7 @@ self.addEventListener('install', function(event) {
     .then(function(cache) {
       console.log('[Service Worker] Precaching App Shell');
       return cache.addAll([
-        '/index.html',
-        '/offline.html'
+        './index.html'
       ])
       console.log('add sukses')
     })
@@ -47,7 +46,7 @@ self.addEventListener('fetch', (event) => {
     }).catch(() => {
       //console.log('ini belum ada inet');
       //window.alert("sometext");
-      return caches.match('/offline.html');
+      return caches.match('/index.html');
     })
   );
 });
