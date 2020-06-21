@@ -1,5 +1,13 @@
-const STATIC_CACHE_NAME = 'cache-static-v5'
-const STATIC_ASSETS = [ 
+var CACHE_STATIC_NAME = 'static-v1';
+
+self.addEventListener('install', function(event) {
+  console.log('[Service Worker] Installing Service Worker ...', event);
+  self.skipWaiting(); //PENTING bila ada versi baru!!
+  event.waitUntil(
+    caches.open(CACHE_STATIC_NAME)
+    .then(function(cache) {
+      console.log('[Service Worker] Precaching App Shell');
+      return cache.addAll([
   './',
  './index.html',
  './manifest.json',
@@ -15,54 +23,43 @@ const STATIC_ASSETS = [
  './images/icon/icon-256x256.png',
  './images/icon/icon-384x384.png',
  './images/icon/icon-512x512.png'
-];
-
-
-
-self.addEventListener('install', async evt => {
-    self.skipWaiting(); //PENTING bila ada versi baru!!
-  const cache = await caches.open(STATIC_CACHE_NAME);
-  cache.addAll(STATIC_ASSETS);
+      ])
+    })
+  )
 });
 
-self.addEventListener('fetch', evt => {
- const req = evt.request;
- const url = new URL(req.url);
 
- if (url.origin == location.origin) {
-  evt.respondWith(cacheFirst(req));
- } else {
-  evt.respondWith(networkFirst(req));
- }
+self.addEventListener('activate', function(event) {
+  console.log('[Service Worker] Activating Service Worker ....', event);
+  event.waitUntil(
+    caches.keys()
+      .then(function(keyList) {
+        return Promise.all(keyList.map(function(key) {
+          if (key !== CACHE_STATIC_NAME) {
+            console.log('[Service Worker] Removing old cache.', key);
+            return caches.delete(key);
+          }
+        }));
+      })
+  );
+  return self.clients.claim();
 });
 
-async function cacheFirst(req) {
- const cachedResponse = await caches.match(req);
- return cachedResponse || fetch(req);
-}
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((resp) => {
+      return resp || fetch(event.request).then((response) => {
+        let responseClone = response.clone();
+        caches.open(CACHE_STATIC_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
 
-async function networkFirst(req) {
- const cache = await caches.open(STATIC_CACHE_NAME);
- try {
-        // try go to network and fetch data 
-  const res = await fetch(req);
-  cache.put(req, res.clone());
-  return res;
- } catch(error) {
-        // look something on cache. 
-  return await cache.match(req);
- }
-}
-
-self.addEventListener('activate', (evt) => {
- evt.waitUntil( 
-     caches.keys().then((keyList) => { 
-         return Promise.all(keyList.map((key) => { 
-             if (key !== STATIC_CACHE_NAME) { 
-                 console.log('[ServiceWorker] Removing old cache', key); 
-                 return caches.delete(key); 
-             } 
-         }));
-     })
- ); 
+        return response;
+      });
+    }).catch(() => {
+      //console.log('ini belum ada inet');
+      //window.alert("sometext");
+      return caches.match('/offline.html');
+    })
+  );
 });
