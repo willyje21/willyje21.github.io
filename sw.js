@@ -22,7 +22,7 @@ self.addEventListener('install', function(event) {
   console.log('[Service Worker] Installing Service Worker ...', event);
   self.skipWaiting(); //PENTING bila ada versi baru!!
   event.waitUntil(
-    caches.open(CACHE_STATIC_NAME)
+    caches.open(STATIC_CACHE_NAME)
     .then(function(cache) {
       console.log('[Service Worker] Precaching App Shell');
       return cache.addAll(STATIC_ASSETS)
