@@ -1,4 +1,4 @@
-var CACHE_STATIC_NAME = 'static-v1';
+var CACHE_STATIC_NAME = 'static-v6';
 
 self.addEventListener('install', function(event) {
   console.log('[Service Worker] Installing Service Worker ...', event);
@@ -8,7 +8,6 @@ self.addEventListener('install', function(event) {
     .then(function(cache) {
       console.log('[Service Worker] Precaching App Shell');
       return cache.addAll([
-  './',
  './index.html',
  './manifest.json',
  './script/index.js',
