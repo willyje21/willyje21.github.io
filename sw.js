@@ -11,6 +11,7 @@ self.addEventListener('install', function(event) {
         '/index.html',
         '/offline.html'
       ])
+      console.log('add sukses')
     })
   )
 });
