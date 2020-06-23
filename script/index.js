@@ -25,4 +25,4 @@ fetch(urlTrending,{
 	    	document.getElementById("newsResults").innerHTML += "<div class='col-md-4 mt-3 text-center'><div class='card'><div class='card-header'><h5>" + d.articles[i].title + "</h5></div><div class='card-body'><h5>Author : "+  d.articles[i].author+"</h5><h5>Topic : "+d.articles[i].topic+"</h5><h5>"+d.articles[i].published_date+"</h5><div class='card-action'><a href="+d.articles[i].link+" target='_blank' rel='noopener' class='btn'>Read More</a></div></div></div></div>";
     }
 })
-ddx
+
