@@ -1,6 +1,7 @@
 const STATIC_ASSETS = [ 
   './',
  './index.html',
+ './about.html',
  './manifest.json',
  './corona.jpg',
  './script/index.js',
@@ -29,6 +30,7 @@ self.addEventListener('install', function(event) {
       console.log('[Service Worker] Precaching App Shell');
       return cache.addAll([
         './index.html',
+        './about.html',
         './css/bootstrap.min.css'
       ])
     })
