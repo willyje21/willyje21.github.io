@@ -1,9 +1,11 @@
 const STATIC_ASSETS = [ 
- './',
+  './',
  './index.html',
+ './',
  './about.html',
  './manifest.json',
  './corona.jpg',
+ './script/index.js',
  './script/jquery-3.3.1.min.js',
  './script/materialize.min.js',
  './css/boostrap.min.css',
@@ -17,7 +19,7 @@ const STATIC_ASSETS = [
  './images/icon/icon-512x512.png'
 ];
 
-const STATIC_CACHE_NAME = 'cache-static-v7';
+const STATIC_CACHE_NAME = 'cache-static-v8';
 const DYNAMIC_CACHE_NAME = 'cache-dynamic-v1';
 
 self.addEventListener('install', function(event) {
@@ -31,7 +33,6 @@ self.addEventListener('install', function(event) {
         './index.html',
         './about.html',
         './css/boostrap.min.css'
-        
       ])
     })
   )
