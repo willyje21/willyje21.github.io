@@ -18,7 +18,7 @@ const STATIC_ASSETS = [
  './images/icon/icon-512x512.png'
 ];
 
-const STATIC_CACHE_NAME = 'cache-static-v7';
+const STATIC_CACHE_NAME = 'cache-static-v8';
 const DYNAMIC_CACHE_NAME = 'cache-dynamic-v1';
 
 self.addEventListener('install', function(event) {
@@ -30,6 +30,7 @@ self.addEventListener('install', function(event) {
       console.log('[Service Worker] Precaching App Shell');
       return cache.addAll([
         './index.html',
+        './about.html',
         './css/boostrap.min.css'
         
       ])
