@@ -1,7 +1,6 @@
 const STATIC_ASSETS = [ 
   './',
  './index.html',
- './',
  './about.html',
  './manifest.json',
  './corona.jpg',
@@ -18,10 +17,8 @@ const STATIC_ASSETS = [
  './images/icon/icon-384x384.png',
  './images/icon/icon-512x512.png'
 ];
-
-const STATIC_CACHE_NAME = 'cache-static-v8';
+const STATIC_CACHE_NAME = 'cache-static-v7';
 const DYNAMIC_CACHE_NAME = 'cache-dynamic-v1';
-
 self.addEventListener('install', function(event) {
   console.log('[Service Worker] Installing Service Worker ...', event);
   self.skipWaiting(); //PENTING bila ada versi baru!!
@@ -32,12 +29,12 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         './index.html',
         './about.html',
-        './css/boostrap.min.css'
+        './css/bootstrap.min.css'
+
       ])
     })
   )
 });
-
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
@@ -57,8 +54,6 @@ self.addEventListener('fetch', function(event) {
       })
   );
 });
-
-
 self.addEventListener('activate', (evt) => {
  evt.waitUntil( 
      caches.keys().then((keyList) => { 
@@ -71,4 +66,3 @@ self.addEventListener('activate', (evt) => {
      })
  ); 
 });
-
