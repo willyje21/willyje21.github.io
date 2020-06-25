@@ -1,5 +1,6 @@
 const STATIC_ASSETS = [ 
  './',
+ './index.html',
  './about.html',
  './manifest.json',
  './corona.jpg',
