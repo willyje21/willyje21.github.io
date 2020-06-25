@@ -1,10 +1,10 @@
 const STATIC_ASSETS = [ 
   './',
  './index.html',
+ './offline.html',
  './about.html',
  './manifest.json',
  './corona.jpg',
-  './offline.html',
  './script/index.js',
  './script/jquery-3.3.1.min.js',
  './script/materialize.min.js',
