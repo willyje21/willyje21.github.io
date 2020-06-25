@@ -8,7 +8,7 @@ const STATIC_ASSETS = [
  './script/jquery-3.3.1.min.js',
  './script/materialize.min.js',
  './css/boostrap.min.css',
- './css/materialize.min.css'
+ './css/materialize.min.css',
  './images/icon/icon-48x48.png',
  './images/icon/icon-96x96.png',
  './images/icon/icon-144x144.png',
@@ -30,6 +30,7 @@ self.addEventListener('install', function(event) {
       console.log('[Service Worker] Precaching App Shell');
       return cache.addAll([
         './index.html',
+        './offline.html',
         './css/boostrap.min.css'
         
       ])
@@ -69,4 +70,30 @@ self.addEventListener('activate', (evt) => {
          }));
      })
  ); 
+});
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+      .then(function(response) {
+        if (response) {
+          return response;
+        } else {
+          return fetch(event.request)
+            .then(function(res) {
+              return caches.open(CACHE_DYNAMIC_NAME)
+                .then(function(cache) {
+                  cache.put(event.request.url, res.clone());
+                  return res;
+                })
+            })
+            .catch(function(err) {
+              return caches.open(CACHE_STATIC_NAME)
+                .then(function(cache) {
+                  return cache.match('/offline.html');
+                });
+            });
+        }
+      })
+  );
 });
