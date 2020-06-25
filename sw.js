@@ -4,7 +4,6 @@ const STATIC_ASSETS = [
  './about.html',
  './manifest.json',
  './corona.jpg',
- './script/index.js',
  './script/jquery-3.3.1.min.js',
  './script/materialize.min.js',
  './css/boostrap.min.css',
