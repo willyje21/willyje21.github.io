@@ -4,6 +4,11 @@ const STATIC_ASSETS = [
  './about.html',
  './manifest.json',
  './corona.jpg',
+ './script/index.js',
+ './script/jquery-3.3.1.min.js',
+ './script/materialize.min.js',
+ './css/boostrap.min.css',
+ './css/materialize.min.css'
  './images/icon/icon-48x48.png',
  './images/icon/icon-96x96.png',
  './images/icon/icon-144x144.png',
@@ -26,11 +31,7 @@ self.addEventListener('install', function(event) {
       return cache.addAll([
         './index.html',
         './offline.html,
-        './script/index.js',
-         './script/jquery-3.3.1.min.js',
-         './script/materialize.min.js',
-         './css/boostrap.min.css',
-         './css/materialize.min.css'
+        './css/boostrap.min.css'
         
       ])
     })
